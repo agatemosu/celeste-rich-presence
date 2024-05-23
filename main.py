@@ -25,10 +25,9 @@ def main():
 
     while True:
         game_is_running = False
-        discord_is_running = False
 
         for process in psutil.process_iter():
-            if game_is_running and discord_is_running:
+            if game_is_running:
                 break
             else:
                 with process.oneshot():
@@ -38,12 +37,10 @@ def main():
                         game_location = process.cmdline()[0].replace('Celeste.exe', '')
                         start_time = int(process.create_time())
                         game_is_running = True
-                    elif 'Discord' in p_name:
-                        discord_is_running = True
 
                 time.sleep(0.001)
 
-        if game_is_running and discord_is_running:
+        if game_is_running:
             if not client_connected:
                 # connects to Discord
                 client = ipc.DiscordIPC('528044034619604992')
@@ -125,8 +122,6 @@ def main():
 
             # send everything to discord
             client.update_activity(activity)
-        elif not discord_is_running:
-            print("{}\nDiscord isn't running\n")
         else:
             if client_connected:
                 try:
