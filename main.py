@@ -33,8 +33,7 @@ def main():
                 with process.oneshot():
                     p_name = process.name()
 
-                    if p_name == "Celeste.exe":
-                        game_location = process.cmdline()[0].replace('Celeste.exe', '')
+                    if "Celeste" in p_name:
                         start_time = int(process.create_time())
                         game_is_running = True
 
