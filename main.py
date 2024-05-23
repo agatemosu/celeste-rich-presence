@@ -6,7 +6,6 @@ from operator import itemgetter
 sys.path.append(os.path.abspath(os.path.join('python', 'packages')))
 sys.path.append(os.path.abspath(os.path.join('python')))
 import psutil
-import psutil._exceptions as ps_exceptions
 from bs4 import BeautifulSoup
 from discoIPC import ipc
 
@@ -32,20 +31,15 @@ def main():
             if game_is_running and discord_is_running:
                 break
             else:
-                try:
-                    with process.oneshot():
-                        p_name = process.name()
+                with process.oneshot():
+                    p_name = process.name()
 
-                        if p_name == "Celeste.exe":
-                            game_location = process.cmdline()[0].replace('Celeste.exe', '')
-                            start_time = int(process.create_time())
-                            game_is_running = True
-                        elif 'Discord' in p_name:
-                            discord_is_running = True
-                except ps_exceptions.NoSuchProcess:
-                    pass
-                except ps_exceptions.AccessDenied:
-                    pass
+                    if p_name == "Celeste.exe":
+                        game_location = process.cmdline()[0].replace('Celeste.exe', '')
+                        start_time = int(process.create_time())
+                        game_is_running = True
+                    elif 'Discord' in p_name:
+                        discord_is_running = True
 
                 time.sleep(0.001)
 
