@@ -9,6 +9,16 @@ import psutil
 from bs4 import BeautifulSoup
 from discoIPC import ipc
 
+def get_game_location(cmdline):
+    if sys.platform.startswith('win'):
+        return os.path.dirname(cmdline[0])
+    elif sys.platform.startswith('linux'):
+        return os.path.expanduser('~/.local/share/Celeste')
+    elif sys.platform.startswith('darwin'):
+        raise Exception("Unsupported operating system: macOS")
+    else:
+        raise Exception(f"Unknown operating system: {sys.platform}")
+
 
 def main():
     chapter_names = ['Prologue', 'Chapter 1: Forsaken City', 'Chapter 2: Old Site', 'Chapter 3: Celestial Resort', 'Chapter 4: Golden Ridge', 'Chapter 5: Mirror Temple',
@@ -34,6 +44,7 @@ def main():
                     p_name = process.name()
 
                     if "Celeste" in p_name:
+                        game_location = get_game_location(process.cmdline()[0])
                         start_time = int(process.create_time())
                         game_is_running = True
 
