@@ -53,7 +53,7 @@ def main():
         if game_is_running:
             if not client_connected:
                 # connects to Discord
-                client = ipc.DiscordIPC('528044034619604992')
+                client = ipc.DiscordIPC('1243103531615916052')
                 client.connect()
                 client_connected = True
 
