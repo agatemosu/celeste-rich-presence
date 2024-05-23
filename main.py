@@ -22,8 +22,8 @@ def get_game_location(cmdline):
 
 def main():
     chapter_names = ['Prologue', 'Chapter 1: Forsaken City', 'Chapter 2: Old Site', 'Chapter 3: Celestial Resort', 'Chapter 4: Golden Ridge', 'Chapter 5: Mirror Temple',
-                     'Chapter 6: Reflection', 'Chapter 7: The Summit', 'Epilogue', 'Chapter 8: Core']
-    chapter_pics = ['intro', 'city', 'oldsite', 'resort', 'golden', 'temple', 'reflection', 'summit', 'intro', 'core']
+                     'Chapter 6: Reflection', 'Chapter 7: The Summit', 'Epilogue', 'Chapter 8: Core', 'Farewell']
+    chapter_pics = ['intro', 'city', 'oldsite', 'resort', 'golden', 'temple', 'reflection', 'summit', 'intro', 'core', 'farewell']
     sides = {'Normal': ('A-Side', 'aside'), 'BSide': ('B-Side', 'bside'), 'CSide': ('C-Side', 'cside')}
 
     start_time = int(time.time())
