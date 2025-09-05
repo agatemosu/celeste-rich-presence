@@ -1,18 +1,17 @@
-[tool.poetry]
+[project]
 name = "celeste-rich-presence"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
-authors = ["iTrooz"]
+authors = [
+    { name = "Kataiser" },
+    { name = "iTrooz" },
+    { name = "Agatem" },
+]
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-json-lxml = "^0.1.4"
-psutil = "^5.9.8"
-beautifulsoup4 = "^4.12.3"
-discoipc = "^1.0.0"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.13.5",
+    "discoipc>=1.0.0",
+    "lxml>=6.0.1",
+    "psutil>=7.0.0",
+]
