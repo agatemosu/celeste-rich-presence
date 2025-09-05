@@ -3,8 +3,6 @@ import sys
 import time
 from operator import itemgetter
 
-sys.path.append(os.path.abspath(os.path.join('python', 'packages')))
-sys.path.append(os.path.abspath(os.path.join('python')))
 import psutil
 from bs4 import BeautifulSoup
 from discoIPC import ipc
@@ -60,7 +58,7 @@ def main():
             save_files = []
             for save_file in os.listdir(os.path.join(game_location, 'Saves')):
                 full_path = os.path.join(game_location, "Saves", save_file)
-                if 'settings' not in save_file:
+                if save_file.endswith(".celeste") and 'settings' not in save_file:
                     save_files.append((full_path, os.stat(full_path).st_mtime))
             current_save_file_path = sorted(save_files, key=itemgetter(1), reverse=True)[0][0]
 
@@ -68,7 +66,7 @@ def main():
                 xml_soup = BeautifulSoup(current_save_file.read(), 'xml')
 
                 try:
-                    current_save_number = int(current_save_file.name.split('\\')[-1][0]) + 1
+                    current_save_number = int(current_save_file.name.split(os.sep)[-1][0]) + 1
                 except ValueError:
                     current_save_number = None
 
