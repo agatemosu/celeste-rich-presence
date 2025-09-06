@@ -7,6 +7,26 @@ import psutil
 from bs4 import BeautifulSoup
 from discoIPC import ipc
 
+CHAPTERS = [
+    {"pic": "intro", "name": "Prologue"},
+    {"pic": "city", "name": "Chapter 1: Forsaken City"},
+    {"pic": "oldsite", "name": "Chapter 2: Old Site"},
+    {"pic": "resort", "name": "Chapter 3: Celestial Resort"},
+    {"pic": "golden", "name": "Chapter 4: Golden Ridge"},
+    {"pic": "temple", "name": "Chapter 5: Mirror Temple"},
+    {"pic": "reflection", "name": "Chapter 6: Reflection"},
+    {"pic": "summit", "name": "Chapter 7: The Summit"},
+    {"pic": "intro", "name": "Epilogue"},
+    {"pic": "core", "name": "Chapter 8: Core"},
+    {"pic": "farewell", "name": "Farewell"},
+]
+
+SIDES = {
+    "Normal": ("A-Side", "aside"),
+    "BSide": ("B-Side", "bside"),
+    "CSide": ("C-Side", "cside"),
+}
+
 def get_game_location(cmdline):
     if sys.platform.startswith('win'):
         return os.path.dirname(cmdline[0])
@@ -19,11 +39,6 @@ def get_game_location(cmdline):
 
 
 def main():
-    chapter_names = ['Prologue', 'Chapter 1: Forsaken City', 'Chapter 2: Old Site', 'Chapter 3: Celestial Resort', 'Chapter 4: Golden Ridge', 'Chapter 5: Mirror Temple',
-                     'Chapter 6: Reflection', 'Chapter 7: The Summit', 'Epilogue', 'Chapter 8: Core', 'Farewell']
-    chapter_pics = ['intro', 'city', 'oldsite', 'resort', 'golden', 'temple', 'reflection', 'summit', 'intro', 'core', 'farewell']
-    sides = {'Normal': ('A-Side', 'aside'), 'BSide': ('B-Side', 'bside'), 'CSide': ('C-Side', 'cside')}
-
     start_time = int(time.time())
     activity = {'details': 'In menus',  # this is what gets modified and sent to Discord via discoIPC
                 'timestamps': {'start': start_time},
@@ -82,7 +97,7 @@ def main():
 
             for area in xml_soup.find_all('AreaStats'):
                 if area.get('ID') == str(current_area_id):
-                    current_area_info = area.find_all('AreaModeStats')[list(sides.keys()).index(current_area_mode)]
+                    current_area_info = area.find_all('AreaModeStats')[list(SIDES.keys()).index(current_area_mode)]
                     current_area_deaths = current_area_info.get('Deaths')
 
             if save_slot_name == 'Madeline':
@@ -90,22 +105,22 @@ def main():
             else:
                 save_slot_text = f": \"{save_slot_name}\""
 
-            activity['details'] = chapter_names[current_area_id]
+            activity['details'] = CHAPTERS[current_area_id]["name"]
             activity['assets']['small_image'] = ' '
-            activity['assets']['large_image'] = chapter_pics[current_area_id]
-            activity['assets']['small_text'] = f"{chapter_names[current_area_id]} ({sides[current_area_mode][0]})"
+            activity['assets']['large_image'] = CHAPTERS[current_area_id]["pic"]
+            activity['assets']['small_text'] = f"{CHAPTERS[current_area_id]["name"]} ({SIDES[current_area_mode][0]})"
             activity['timestamps']['start'] = start_time
 
             if not current_save_number and current_save_file_path.endswith('\\debug.celeste'):
                 activity['state'] = "In debug mode"
-                activity['assets']['large_text'] = chapter_names[current_area_id]
+                activity['assets']['large_text'] = CHAPTERS[current_area_id]["name"]
             else:
                 activity['assets']['large_text'] = f"Totals: {total_deaths} deaths, {total_berries} strawberries (save slot #{current_save_number}{save_slot_text})"
 
                 if time.time() - start_time < 15:
                     activity['state'] = "Loading game"
                 elif in_area:
-                    activity['state'] = f"{sides[current_area_mode][0]} ({current_area_deaths} deaths)"
+                    activity['state'] = f"{SIDES[current_area_mode][0]} ({current_area_deaths} deaths)"
                 else:
                     activity['state'] = "In level select"
 
