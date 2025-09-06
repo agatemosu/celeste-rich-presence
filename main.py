@@ -27,15 +27,15 @@ SIDES = {
     "CSide": ("C-Side", "cside"),
 }
 
-def get_game_location(cmdline):
-    if sys.platform.startswith('win'):
+
+def get_game_location(cmdline: str):
+    if sys.platform == "win32":
         return os.path.dirname(cmdline[0])
-    elif sys.platform.startswith('linux'):
-        return os.path.expanduser('~/.local/share/Celeste')
-    elif sys.platform.startswith('darwin'):
-        raise Exception("Unsupported operating system: macOS")
-    else:
-        raise Exception(f"Unknown operating system: {sys.platform}")
+
+    if sys.platform == "linux":
+        return os.path.expanduser("~/.local/share/Celeste")
+
+    raise Exception(f"Unsupported operating system: {sys.platform}")
 
 
 def main():
