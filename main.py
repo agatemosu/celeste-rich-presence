@@ -89,10 +89,10 @@ def main():
             with current_save_file_path.open("r") as current_save_file:
                 xml_soup = BeautifulSoup(current_save_file.read(), 'xml')
 
-                try:
-                    current_save_number = int(current_save_file_path.stem) + 1
-                except ValueError:
-                    current_save_number = None
+            try:
+                current_save_number = int(current_save_file_path.stem) + 1
+            except ValueError:
+                current_save_number = None
 
             save_slot_name = xml_soup.find('Name').string
             current_area_id = int(xml_soup.find('LastArea').get('ID'))
