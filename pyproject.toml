@@ -11,7 +11,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "beautifulsoup4>=4.13.5",
-    "discoipc>=1.0.0",
     "lxml>=6.0.1",
     "psutil>=7.0.0",
+    "pypresence>=4.3.0",
 ]

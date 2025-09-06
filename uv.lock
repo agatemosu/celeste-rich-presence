@@ -21,26 +21,17 @@ version = "0.2.0"
 source = { virtual = "." }
 dependencies = [
     { name = "beautifulsoup4" },
-    { name = "discoipc" },
     { name = "lxml" },
     { name = "psutil" },
+    { name = "pypresence" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.13.5" },
-    { name = "discoipc", specifier = ">=1.0.0" },
     { name = "lxml", specifier = ">=6.0.1" },
     { name = "psutil", specifier = ">=7.0.0" },
-]
-
-[[package]]
-name = "discoipc"
-version = "1.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ab/e6/6b838619242aff2493eaa3de2c883aa75d39b74668b2d4c19371ae0d8685/discoIPC-1.0.0.tar.gz", hash = "sha256:46eb0fa67c3edfcdc5fcf6d9ec1ff657e26749ce333d9f4c3d0d9b28a5036038", size = 17304, upload-time = "2018-03-21T13:55:41.149Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/56/48/cfe250fea42acf69f2c08583abf5af1daf65c2bdae02fa650cba35eed676/discoIPC-1.0.0-py2.py3-none-any.whl", hash = "sha256:ba6d8dd591ec4c126a1e60b02b02ddcfdd0ca5f6d68bc2c9273e6ad018e5e83b", size = 18224, upload-time = "2018-03-21T13:55:37.242Z" },
+    { name = "pypresence", specifier = ">=4.3.0" },
 ]
 
 [[package]]
@@ -118,6 +109,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/eb/a2/709e0fe2f093556c17fbafda93ac032257242cabcc7ff3369e2cb76a97aa/psutil-7.0.0-cp36-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a5f098451abc2828f7dc6b58d44b532b22f2088f4999a937557b603ce72b1993", size = 279544, upload-time = "2025-02-13T21:54:24.68Z" },
     { url = "https://files.pythonhosted.org/packages/50/e6/eecf58810b9d12e6427369784efe814a1eec0f492084ce8eb8f4d89d6d61/psutil-7.0.0-cp37-abi3-win32.whl", hash = "sha256:ba3fcef7523064a6c9da440fc4d6bd07da93ac726b5733c29027d7dc95b39d99", size = 241053, upload-time = "2025-02-13T21:54:34.31Z" },
     { url = "https://files.pythonhosted.org/packages/50/1b/6921afe68c74868b4c9fa424dad3be35b095e16687989ebbb50ce4fceb7c/psutil-7.0.0-cp37-abi3-win_amd64.whl", hash = "sha256:4cf3d4eb1aa9b348dec30105c55cd9b7d4629285735a102beb4441e38db90553", size = 244885, upload-time = "2025-02-13T21:54:37.486Z" },
+]
+
+[[package]]
+name = "pypresence"
+version = "4.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f4/2e/d110f862720b5e3ba1b0b719657385fc4151929befa2c6981f48360aa480/pypresence-4.3.0.tar.gz", hash = "sha256:a6191a3af33a9667f2a4ef0185577c86b962ee70aa82643c472768a6fed1fbf3", size = 10696, upload-time = "2023-07-08T00:33:53.49Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1e/40/1d30b30e18f81eb71365681223971a9822a89b3d6ee5269dd2aa955bc228/pypresence-4.3.0-py2.py3-none-any.whl", hash = "sha256:af878c6d49315084f1b108aec86b31915080614d9421d6dd3a44737aba9ff13f", size = 11778, upload-time = "2023-07-08T00:33:52.018Z" },
 ]
 
 [[package]]

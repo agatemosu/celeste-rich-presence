@@ -5,7 +5,7 @@ from pathlib import Path
 
 import psutil
 from bs4 import BeautifulSoup
-from discoIPC import ipc
+from pypresence import Presence
 
 CHAPTERS = [
     {"pic": "intro", "name": "Prologue"},
@@ -52,15 +52,12 @@ def get_latest_save(game_location: Path):
 
 
 def main():
-    start_time = int(time.time())
-    activity = {'details': 'In menus',  # this is what gets modified and sent to Discord via discoIPC
-                'timestamps': {'start': start_time},
-                'assets': {'small_image': ' ', 'small_text': 'In menus', 'large_image': 'logo', 'large_text': 'Celeste'},
-                'state': 'yeet'}
-    client = ipc.DiscordIPC('1243103531615916052')
+    rpc = Presence('1243103531615916052')
+    rpc.connect()
 
     while True:
         game_is_running = False
+        activity = {}
 
         for process in psutil.process_iter():
             if game_is_running:
@@ -76,18 +73,16 @@ def main():
 
             time.sleep(0.001)
 
-        if game_is_running:
-            if not client.connected:
-                # connects to Discord
-                client.connect()
-
+        if not game_is_running:
+            print("Celeste isn't running.")
+            rpc.clear()
+        else:
             current_save_file_path = get_latest_save(Path(game_location) / 'Saves')
             if not current_save_file_path:
-                print("No save files found")
-                return
+                print("No save files found.")
+                break
 
-            with current_save_file_path.open("r") as current_save_file:
-                xml_soup = BeautifulSoup(current_save_file.read(), 'xml')
+            xml_soup = BeautifulSoup(current_save_file_path.read_text(), 'xml')
 
             try:
                 current_save_number = int(current_save_file_path.stem) + 1
@@ -117,16 +112,16 @@ def main():
                 save_slot_text = f": \"{save_slot_name}\""
 
             activity['details'] = CHAPTERS[current_area_id]["name"]
-            activity['assets']['small_image'] = ' '
-            activity['assets']['large_image'] = CHAPTERS[current_area_id]["pic"]
-            activity['assets']['small_text'] = f"{CHAPTERS[current_area_id]["name"]} ({SIDES[current_area_mode][0]})"
-            activity['timestamps']['start'] = start_time
+            activity['small_image'] = ' '
+            activity['large_image'] = CHAPTERS[current_area_id]["pic"]
+            activity['small_text'] = f"{CHAPTERS[current_area_id]["name"]} ({SIDES[current_area_mode][0]})"
+            activity['start'] = start_time
 
             if not current_save_number and current_save_file_path.name == "debug.celeste":
                 activity['state'] = "In debug mode"
-                activity['assets']['large_text'] = CHAPTERS[current_area_id]["name"]
+                activity['large_text'] = CHAPTERS[current_area_id]["name"]
             else:
-                activity['assets']['large_text'] = f"Totals: {total_deaths} deaths, {total_berries} strawberries (save slot #{current_save_number}{save_slot_text})"
+                activity['large_text'] = f"Totals: {total_deaths} deaths, {total_berries} strawberries (save slot #{current_save_number}{save_slot_text})"
 
                 if time.time() - start_time < 15:
                     activity['state'] = "Loading game"
@@ -137,7 +132,8 @@ def main():
 
             print(activity['details'])
             print(activity['state'])
-            print(activity['assets']['large_text'])
+            print(activity['large_text'])
+
             time_elapsed = time.time() - start_time
             print("{:02}:{:02} elapsed".format(int(time_elapsed / 60), round(time_elapsed % 60)))
             print()
@@ -153,17 +149,12 @@ def main():
                     history_file_a.write(activity_str)
 
             # send everything to discord
-            client.update_activity(activity)
-        else:
-            if client.connected:
-                client.disconnect()
-                print("Exiting...")
-                return
-            else:
-                print("Celeste isn't running\n")
+            rpc.update(**activity)
 
         # rich presence only updates every 15 seconds, but it listens constantly so sending every 5 seconds is fine
         time.sleep(10)
+
+    rpc.close()
 
 
 if __name__ == '__main__':
