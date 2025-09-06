@@ -37,16 +37,16 @@ def main():
         for process in psutil.process_iter():
             if game_is_running:
                 break
-            else:
-                with process.oneshot():
-                    p_name = process.name()
 
-                    if "Celeste" in p_name:
-                        game_location = get_game_location(process.cmdline()[0])
-                        start_time = int(process.create_time())
-                        game_is_running = True
+            with process.oneshot():
+                p_name = process.name()
 
-                time.sleep(0.001)
+                if "Celeste" in p_name:
+                    game_location = get_game_location(process.cmdline()[0])
+                    start_time = int(process.create_time())
+                    game_is_running = True
+
+            time.sleep(0.001)
 
         if game_is_running:
             if not client_connected:
