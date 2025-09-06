@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-from operator import itemgetter
+from pathlib import Path
 
 import psutil
 from bs4 import BeautifulSoup
@@ -38,6 +38,19 @@ def get_game_location(cmdline: str):
     raise Exception(f"Unsupported operating system: {sys.platform}")
 
 
+def get_latest_save(game_location: Path):
+    save_files = [
+        f
+        for f in game_location.iterdir()
+        if f.is_file() and f.suffix == ".celeste" and f.stem != "settings"
+    ]
+
+    if not save_files:
+        return None
+
+    return max(save_files, key=lambda f: f.stat().st_mtime)
+
+
 def main():
     start_time = int(time.time())
     activity = {'details': 'In menus',  # this is what gets modified and sent to Discord via discoIPC
@@ -68,18 +81,16 @@ def main():
                 # connects to Discord
                 client.connect()
 
-            save_files = []
-            for save_file in os.listdir(os.path.join(game_location, 'Saves')):
-                full_path = os.path.join(game_location, "Saves", save_file)
-                if save_file.endswith(".celeste") and 'settings' not in save_file:
-                    save_files.append((full_path, os.stat(full_path).st_mtime))
-            current_save_file_path = sorted(save_files, key=itemgetter(1), reverse=True)[0][0]
+            current_save_file_path = get_latest_save(Path(game_location) / 'Saves')
+            if not current_save_file_path:
+                print("No save files found")
+                return
 
-            with open(current_save_file_path, 'r', errors='replace') as current_save_file:
+            with current_save_file_path.open("r") as current_save_file:
                 xml_soup = BeautifulSoup(current_save_file.read(), 'xml')
 
                 try:
-                    current_save_number = int(current_save_file.name.split(os.sep)[-1][0]) + 1
+                    current_save_number = int(current_save_file_path.stem) + 1
                 except ValueError:
                     current_save_number = None
 
@@ -111,7 +122,7 @@ def main():
             activity['assets']['small_text'] = f"{CHAPTERS[current_area_id]["name"]} ({SIDES[current_area_mode][0]})"
             activity['timestamps']['start'] = start_time
 
-            if not current_save_number and current_save_file_path.endswith('\\debug.celeste'):
+            if not current_save_number and current_save_file_path.name == "debug.celeste":
                 activity['state'] = "In debug mode"
                 activity['assets']['large_text'] = CHAPTERS[current_area_id]["name"]
             else:
