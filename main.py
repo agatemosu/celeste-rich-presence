@@ -29,7 +29,7 @@ def main():
                 'timestamps': {'start': start_time},
                 'assets': {'small_image': ' ', 'small_text': 'In menus', 'large_image': 'logo', 'large_text': 'Celeste'},
                 'state': 'yeet'}
-    client_connected = False
+    client = ipc.DiscordIPC('1243103531615916052')
 
     while True:
         game_is_running = False
@@ -49,11 +49,9 @@ def main():
             time.sleep(0.001)
 
         if game_is_running:
-            if not client_connected:
+            if not client.connected:
                 # connects to Discord
-                client = ipc.DiscordIPC('1243103531615916052')
                 client.connect()
-                client_connected = True
 
             save_files = []
             for save_file in os.listdir(os.path.join(game_location, 'Saves')):
@@ -131,18 +129,12 @@ def main():
             # send everything to discord
             client.update_activity(activity)
         else:
-            if client_connected:
-                try:
-                    client.disconnect()  # doesn't work...
-                except:
-                    pass
-
-                raise SystemExit  # ...but this does
+            if client.connected:
+                client.disconnect()
+                print("Exiting...")
+                return
             else:
-                print("\nCeleste isn't running\n")
-
-            # to prevent connecting when already connected
-            client_connected = False
+                print("Celeste isn't running\n")
 
         # rich presence only updates every 15 seconds, but it listens constantly so sending every 5 seconds is fine
         time.sleep(10)
